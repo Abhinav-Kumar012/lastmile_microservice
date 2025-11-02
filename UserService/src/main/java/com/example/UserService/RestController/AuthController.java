@@ -1,0 +1,94 @@
+package com.example.UserService.controller;
+
+import com.example.UserService.entity.User;
+import com.example.UserService.repository.UserRepository;
+import com.example.UserService.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    // ✅ REGISTER endpoint
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        if (userRepository.existsById(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already exists!");
+        }
+
+        // Encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully!");
+    }
+
+    // ✅ LOGIN endpoint
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        String password = request.get("password");
+        String role = request.get("role");
+
+        // Check user existence
+        Optional<User> optionalUser = userRepository.findById(username);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found!");
+        }
+
+        User user = optionalUser.get();
+
+        // Check that the user has the given role
+        boolean roleExists = false;
+        for (String r : user.getRoles()) {
+            if (r.equalsIgnoreCase(role)) {
+                roleExists = true;
+                break;
+            }
+        }
+        if (!roleExists) {
+            return ResponseEntity.status(403).body("User does not have role: " + role);
+        }
+
+        // Authenticate credentials
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
+
+        // Generate JWT with the selected role
+        String token = jwtTokenProvider.generateToken(username, role);
+
+        return ResponseEntity.ok(Map.of(
+                "username", username,
+                "role", role,
+                "token", token
+        ));
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(401).body("Not authenticated");
+        }
+
+        String username = authentication.getName();
+        var roles = authentication.getAuthorities();
+
+        return ResponseEntity.ok(Map.of(
+                "username", username,
+                "roles", roles
+        ));
+    }
+}
