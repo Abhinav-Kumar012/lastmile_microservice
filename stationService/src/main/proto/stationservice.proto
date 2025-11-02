@@ -1,0 +1,14 @@
+syntax = "proto3";
+package stationInfo;
+option java_multiple_files = true;
+option java_package = "com.lastmile.grpc";
+option java_outer_classname = "stationServiceProto";
+service StationService{
+    rpc getNearbystations(StationName) returns (NeabyAreas);
+}
+message StationName {
+    string name = 1;
+}
+message NeabyAreas{
+    repeated string nearbyPlaces = 1;
+}
