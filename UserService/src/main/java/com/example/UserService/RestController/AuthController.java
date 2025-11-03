@@ -1,7 +1,7 @@
-package com.example.UserService.controller;
+package com.example.UserService.RestController;
 
 import com.example.UserService.entity.User;
-import com.example.UserService.repository.UserRepository;
+import com.example.UserService.Repository.UserRepository;
 import com.example.UserService.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class AuthController {
     // ✅ REGISTER endpoint
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        if (userRepository.existsById(user.getUsername())) {
+        if (userRepository.findByUsername(user.getUsername())!=null) {
             return ResponseEntity.badRequest().body("Username already exists!");
         }
 
@@ -44,12 +44,12 @@ public class AuthController {
         String role = request.get("role");
 
         // Check user existence
-        Optional<User> optionalUser = userRepository.findById(username);
-        if (optionalUser.isEmpty()) {
+        User user = userRepository.findByUsername(username);
+        if (user==null) {
             return ResponseEntity.status(404).body("User not found!");
         }
 
-        User user = optionalUser.get();
+//        User user = optionalUser.get();
 
         // Check that the user has the given role
         boolean roleExists = false;
@@ -69,7 +69,7 @@ public class AuthController {
         );
 
         // Generate JWT with the selected role
-        String token = jwtTokenProvider.generateToken(username, role);
+        String token = jwtTokenProvider.generateToken(username, role, user.getDriverid());
 
         return ResponseEntity.ok(Map.of(
                 "username", username,

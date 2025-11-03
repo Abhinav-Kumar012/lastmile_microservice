@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer driverid;
+
     private String username;
     private String password;
 

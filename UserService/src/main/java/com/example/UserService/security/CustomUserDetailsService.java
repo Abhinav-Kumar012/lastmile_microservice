@@ -1,7 +1,7 @@
 package com.example.UserService.security;
 
 import com.example.UserService.entity.User;
-import com.example.UserService.repository.UserRepository;
+import com.example.UserService.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,8 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Step 1: Fetch user by username
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        User user = userRepository.findByUsername(username);
+        if(user==null)
+        {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
         // Defensive: handle null roles
         String[] rolesArray = user.getRoles();

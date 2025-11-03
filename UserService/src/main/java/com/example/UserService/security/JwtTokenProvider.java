@@ -22,10 +22,11 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(java.util.Base64.getDecoder().decode(SECRET_KEY));
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role,Integer driverid) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("driverid",driverid)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
