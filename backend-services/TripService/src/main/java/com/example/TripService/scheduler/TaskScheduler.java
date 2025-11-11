@@ -5,6 +5,8 @@ import com.example.TripService.entity.Trip;
 import com.example.TripService.repository.TripRepository;
 import com.example.kafkaevents.events.DriverArrived;
 import com.example.kafkaevents.events.DriverDataRedis;
+import com.example.kafkaevents.events.TripCompleted;
+import com.example.kafkaevents.events.UpdateStatusEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,7 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-
+//This Scheduler manager pickup and dropoff events
 @Component("triptaskscheduler")
 public class TaskScheduler {
 
@@ -57,6 +59,10 @@ public class TaskScheduler {
                     for(Trip trip : ongoingTrips)
                     {
                         kafkaTemplate.send("notification-service",new DriverArrived(trip.getRiderId()));
+                        trip.setStatus("COMPLETED");
+                        tripRepository.save(trip);
+                        kafkaTemplate.send("rider-service", new TripCompleted(trip.getRiderId()));
+
                     }
                 }
             }
