@@ -1,0 +1,192 @@
+services:
+
+  postgres:
+    image: postgres:18
+    container_name: postgres-multi-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    # No ports exposed - internal only
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+    networks:
+      - app-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - app-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    # No ports exposed - internal only
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+    networks:
+      - app-network
+
+  redis:
+    image: redis:8.2.2-alpine
+    container_name: redis-db
+    networks:
+    - app-network
+      
+  driver-service:
+    build:
+      context: ./DriverService
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_driverservice
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+
+  location-service:
+    build:
+      context: ./locationService
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+      - station-service
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+  
+  matching-service:
+    build:
+      context: ./MatchingService
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+      - location-service
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+
+  notification-service:
+    build:
+      context: ./NotificationService
+      dockerfile: Dockerfile
+    ports:
+      - 8086:8086
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+  
+  rider-service:
+    build:
+      context: ./RiderService
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_riderservice
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+
+  station-service:
+    build:
+      context: ./stationService
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+  
+  trip-service:
+    build:
+      context: ./TripService
+      dockerfile: Dockerfile
+    ports:
+      - 8084:8084
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_tripservice
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+
+  user-service:
+    build:
+      context: ./UserService
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_userservice
+      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
