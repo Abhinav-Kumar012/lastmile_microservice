@@ -14,6 +14,6 @@ with requests.get(url, headers=header, stream=True) as response:
 
     client = SSEClient(response)
     for event in client.events():
-        print(f"{role}:{event.data}")
+        print(f"[{role}] : {event.data}")
 
 

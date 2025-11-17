@@ -4,7 +4,7 @@ import time
 
 USERSERVICE = "http://localhost:8081"
 DRIVERSERVICE = "http://localhost:8082"
-RIDERSERVICE = "http://localhost:8082"
+RIDERSERVICE = "http://localhost:8083"
 TRIPSERVICE = "http://localhost:8084"
 # register a user
 def register_a_rider_and_driver(rider_name,rider_pass,driver_name,driver_pass):
@@ -51,14 +51,16 @@ def register_route(jwt_token,starting,dest,seats):
         "available_seats" : seats
     }
     data = requests.post(url=url,headers=headers,json=params)
-    return data.json()["route_id"]
+    routeId = data.json()["route_id"]
+    print(f"route id : {routeId}")
+    return routeId
 
 
 def register_arrival(jwt,dest,station):
     url = RIDERSERVICE + "/api/register-arrival"
     headers = {
         "Authorization": f"Bearer {jwt}",
-        "Content-Type": "application/json"
+        # "Content-Type": "application/json"
     }
     time = (datetime.datetime.now() + datetime.timedelta(minutes=4)).strftime("%Y-%m-%dT%H:%M:%S")
     params = {

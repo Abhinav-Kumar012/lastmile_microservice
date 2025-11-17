@@ -59,8 +59,8 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_driverservice
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_driverservice
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -76,7 +76,9 @@ services:
       - redis
       - station-service
     environment:
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - GRPC_SERVER_HOST=station-service
+      - GRPC_SERVER_PORT=9091
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -92,7 +94,9 @@ services:
       - redis
       - location-service
     environment:
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - GRPC_SERVER_HOST=location-service
+      - GRPC_SERVER_PORT=9095
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -109,7 +113,7 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -126,8 +130,8 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_riderservice
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_riderservice
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -142,7 +146,7 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -159,8 +163,8 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_tripservice
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_tripservice
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
@@ -177,8 +181,8 @@ services:
       - kafka
       - redis
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-multi-db:5432/lastmile_userservice
-      - SPRING_DATA_REDIS_HOST=redis-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_userservice
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
