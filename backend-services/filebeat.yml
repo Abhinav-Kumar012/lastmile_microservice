@@ -1,0 +1,60 @@
+filebeat.inputs:
+
+  - type: log
+    enabled: true
+    paths:
+      - DriverService/logs/application.log
+    fields:
+      service.name: driver-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - LocationService/logs/application.log
+    fields:
+      service.name: location-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - MatchingService/logs/application.log
+    fields:
+      service.name: matching-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - NotificationService/logs/application.log
+    fields:
+      service.name: notification-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - RiderService/logs/application.log
+    fields:
+      service.name: rider-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - TripService/logs/application.log
+    fields:
+      service.name: trip-service
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - UserService/logs/application.log
+    fields:
+      service.name: user-service
+    fields_under_root: true
+
+output.logstash:
+  hosts: ["logstash:5044"]
