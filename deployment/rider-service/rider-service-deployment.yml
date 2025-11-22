@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rider-deployment
+  namespace: lastmile
+  labels:
+    app: rider-service
+spec:
+  replicas: 1   # HPA will overwrite this when scaling
+  selector:
+    matchLabels:
+      app: rider-service
+  template:
+    metadata:
+      labels:
+        app: rider-service
+    spec:
+      containers:
+        - name: rider-service
+          image: siddhesh1712/rider-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+
+          # Spring Boot ENV Variables
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/rider_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: SPRING_REDIS_HOST
+              value: redis-service
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka-service:9092
+            
+          # Resource requests needed for HPA
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

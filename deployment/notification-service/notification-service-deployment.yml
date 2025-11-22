@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+  namespace: lastmile
+  labels:
+    app: notification-service
+spec:
+  replicas: 1   # HPA will overwrite this when scaling
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: siddhesh1712/notification-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8086
+
+          # Spring Boot ENV Variables
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka-service:9092
+
+          # Resource requests needed for HPA
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

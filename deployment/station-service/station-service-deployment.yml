@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: station-deployment
+  namespace: lastmile
+  labels:
+    app: station-service
+spec:
+  replicas: 1   # HPA will overwrite this when scaling
+  selector:
+    matchLabels:
+      app: station-service
+  template:
+    metadata:
+      labels:
+        app: station-service
+    spec:
+      containers:
+        - name: station-service
+          image: siddhesh1712/station-service:latest
+          imagePullPolicy: IfNotPresent
+
+          # Spring Boot ENV Variables
+          env:
+            - name: SPRING_REDIS_HOST
+              value: redis-service
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+
+          # Resource requests needed for HPA
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
