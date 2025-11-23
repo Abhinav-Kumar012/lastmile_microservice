@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logstash
-  namespace: logging
+  namespace: lastmile
 spec:
   replicas: 1
   selector:
@@ -23,7 +23,7 @@ spec:
               mountPath: /usr/share/logstash/config/logstash.yml
               subPath: logstash.yml
             - name: config-volume
-              mountPath: /usr/share/logstash/pipeline/pipelines.yml
+              mountPath: /usr/share/logstash/config/pipelines.yml
               subPath: pipelines.yml
             - name: config-volume
               mountPath: /usr/share/logstash/pipeline/main.conf
@@ -32,18 +32,18 @@ spec:
         - name: config-volume
           configMap:
             name: logstash-config
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: logstash
-  namespace: logging
+  namespace: lastmile
 spec:
   type: ClusterIP
   selector:
     app: logstash
   ports:
     - name: beats
-      protocol: TCP
       port: 5044
       targetPort: 5044

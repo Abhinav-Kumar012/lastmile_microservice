@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: lastmile
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: redis
+
+---
+# Headless service required for StatefulSet stable DNS
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: lastmile
+spec:
+  clusterIP: None
+  ports:
+    - port: 6379
+  selector:
+    app: redis
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: lastmile
+spec:
+  serviceName: "redis"   # Headless service for stable pod identity
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:8.2.2-alpine
+          ports:
+            - containerPort: 6379
+          args: ["--appendonly", "yes"]     # Persistence (AOF)
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

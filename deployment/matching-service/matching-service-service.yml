@@ -7,4 +7,7 @@ spec:
   type: ClusterIP
   selector:
     app: matching-service
-
+  ports:
+    - protocol: TCP
+      port: 8085    # Service port
+      targetPort: 8085   # Container port

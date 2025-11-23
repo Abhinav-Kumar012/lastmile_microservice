@@ -10,7 +10,9 @@
     </logger>
 
     <!-- Turn off all Spring Boot logs -->
-    <root level="OFF">
+    <!--    <root level="OFF">-->
+    <!--    </root>-->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
     </root>
-
 </configuration>

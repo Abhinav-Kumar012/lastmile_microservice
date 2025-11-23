@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: lastmile
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: lastmile
+spec:
+  clusterIP: None
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: lastmile
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      # ❌ Removed initContainers (not needed for Option B)
+
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: POSTGRES_DB
+              value: postgres
+
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+              subPath: data
+
+            # ✔ Option B: Mount init SQL directly into entrypoint directory
+            - name: initdb
+              mountPath: /docker-entrypoint-initdb.d
+
+      volumes:
+        - name: initdb
+          configMap:
+            name: postgres-initdb
+
+        - name: postgres-secret
+          secret:
+            secretName: postgres-secret
+
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

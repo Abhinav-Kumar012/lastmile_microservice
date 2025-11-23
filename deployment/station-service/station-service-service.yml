@@ -7,3 +7,7 @@ spec:
   type: ClusterIP
   selector:
     app: station-service
+  ports:
+    - protocol: TCP
+      port: 9091     # Service port
+      targetPort: 9091   # Container port

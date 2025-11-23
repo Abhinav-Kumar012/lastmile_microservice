@@ -1,96 +1,96 @@
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.0
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-    ports:
-      - "9200:9200"
-    networks:
-      - app-network
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:9.2.0
-    container_name: kibana
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    networks:
-      - app-network
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:9.2.0
-    container_name: logstash
-    ports:
-      - "5044:5044"
-    volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-    depends_on:
-      - elasticsearch
-    networks:
-      - app-network
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:9.2.0
-    container_name: filebeat
-    user: root
-    volumes:
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - app-logs:/logs:ro  # Changed: mount shared volume as read-only
-    depends_on:
-      - logstash
-    networks:
-      - app-network
-
-  postgres:
-    image: postgres:18
-    container_name: postgres-multi-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-    # No ports exposed - internal only
-    volumes:
-      - postgres_data:/var/lib/postgresql
-      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
-    networks:
-      - app-network
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.7.0
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - app-network
-
-  kafka:
-    image: confluentinc/cp-kafka:7.7.0
-    container_name: kafka
-    depends_on:
-      - zookeeper
-    # No ports exposed - internal only
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-    networks:
-      - app-network
-
-  redis:
-    image: redis:8.2.2-alpine
-    container_name: redis-db
-    networks:
-    - app-network
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.0
+#    container_name: elasticsearch
+#    environment:
+#      - discovery.type=single-node
+#      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+#    ports:
+#      - "9200:9200"
+#    networks:
+#      - app-network
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:9.2.0
+#    container_name: kibana
+#    ports:
+#      - "5601:5601"
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - app-network
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:9.2.0
+#    container_name: logstash
+#    ports:
+#      - "5044:5044"
+#    volumes:
+#      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - app-network
+#
+#  filebeat:
+#    image: docker.elastic.co/beats/filebeat:9.2.0
+#    container_name: filebeat
+#    user: root
+#    volumes:
+#      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+#      - app-logs:/logs:ro  # Changed: mount shared volume as read-only
+#    depends_on:
+#      - logstash
+#    networks:
+#      - app-network
+#
+#  postgres:
+#    image: postgres:18
+#    container_name: postgres-multi-db
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 1234
+#    # No ports exposed - internal only
+#    volumes:
+#      - postgres_data:/var/lib/postgresql
+#      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+#    networks:
+#      - app-network
+#
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper:7.7.0
+#    container_name: zookeeper
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
+#    networks:
+#      - app-network
+#
+#  kafka:
+#    image: confluentinc/cp-kafka:7.7.0
+#    container_name: kafka
+#    depends_on:
+#      - zookeeper
+#    # No ports exposed - internal only
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+#      KAFKA_JMX_PORT: 9101
+#      KAFKA_JMX_HOSTNAME: localhost
+#    networks:
+#      - app-network
+#
+#  redis:
+#    image: redis:8.2.2-alpine
+#    container_name: redis-db
+#    networks:
+#    - app-network
       
   driver-service:
     build:
@@ -98,10 +98,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8082:8082
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     volumes:
       - app-logs:/logs  # Added: mount shared volume
     environment:
@@ -119,11 +119,11 @@ services:
     build:
       context: ./locationService
       dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - kafka
-      - redis
-      - station-service
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
+#      - station-service
     environment:
       - GRPC_SERVER_HOST=station-service
       - GRPC_SERVER_PORT=9091
@@ -142,11 +142,11 @@ services:
     build:
       context: ./MatchingService
       dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - kafka
-      - redis
-      - location-service
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
+#      - location-service
     environment:
       - GRPC_SERVER_HOST=location-service
       - GRPC_SERVER_PORT=9095
@@ -167,10 +167,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8086:8086
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     environment:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
@@ -189,10 +189,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8083:8083
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_riderservice
       - SPRING_DATA_REDIS_HOST=redis
@@ -210,10 +210,10 @@ services:
     build:
       context: ./stationService
       dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     environment:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
@@ -229,10 +229,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8084:8084
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_tripservice
       - SPRING_DATA_REDIS_HOST=redis
@@ -252,10 +252,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8081:8081
-    depends_on:
-      - postgres
-      - kafka
-      - redis
+#    depends_on:
+#      - postgres
+#      - kafka
+#      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lastmile_userservice
       - SPRING_DATA_REDIS_HOST=redis

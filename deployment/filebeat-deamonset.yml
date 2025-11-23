@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: filebeat
-  namespace: kube-system
+  namespace: lastmile
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -26,13 +26,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: filebeat
-    namespace: kube-system
+    namespace: lastmile
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: filebeat
-  namespace: kube-system
+  namespace: lastmile
   labels:
     k8s-app: filebeat
 spec:
@@ -57,7 +57,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           volumeMounts:
-            - name: config
+            - name: filebeat-config
               mountPath: /etc/filebeat.yml
               subPath: filebeat.yml
             - name: varlog
@@ -66,10 +66,10 @@ spec:
               mountPath: /var/lib/docker/containers
               readOnly: true
       volumes:
-        - name: config
+        - name: filebeat-config
           configMap:
             name: filebeat-config
-            defaultMode: 0600
+            defaultMode: 0644
         - name: varlog
           hostPath:
             path: /var/log

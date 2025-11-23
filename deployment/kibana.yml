@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana
+  namespace: lastmile
 spec:
   replicas: 1
   selector:
@@ -28,6 +29,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-service
+  namespace: lastmile
 spec:
   selector:
     app: kibana
