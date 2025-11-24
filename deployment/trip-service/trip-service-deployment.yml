@@ -18,7 +18,7 @@ spec:
       containers:
         - name: trip-service
           image: siddhesh1712/trip-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8084
 
@@ -42,9 +42,9 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password
-            - name: SPRING_REDIS_HOST
+            - name: SPRING_DATA_REDIS_HOST
               value: redis-service
-            - name: SPRING_REDIS_PORT
+            - name: SPRING_DATA_REDIS_PORT
               value: "6379"
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092

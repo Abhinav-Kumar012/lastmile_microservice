@@ -12,38 +12,38 @@ data:
 
     \c lastmile_driverservice;
     CREATE TABLE routes (
-                            route_id SERIAL PRIMARY KEY,
-                            driver_id INTEGER NOT NULL,
-                            starting_location VARCHAR(255),
-                            destination VARCHAR(255),
-                            available_seats INTEGER,
-                            current_location VARCHAR(255)
+      route_id SERIAL PRIMARY KEY,
+      driver_id INTEGER NOT NULL,
+      starting_location VARCHAR(255),
+      destination VARCHAR(255),
+      available_seats INTEGER,
+      current_location VARCHAR(255)
     );
 
     \c lastmile_riderservice;
     CREATE TABLE rides (
-                           arrival_id SERIAL PRIMARY KEY,
-                           rider_id INTEGER NOT NULL,
-                           arrivaltime TIMESTAMP,
-                           destination VARCHAR(255),
-                           arrivalstationname VARCHAR(255),
-                           status VARCHAR(50)
+       arrival_id SERIAL PRIMARY KEY,
+       rider_id INTEGER NOT NULL,
+       arrivaltime TIMESTAMP,
+       destination VARCHAR(255),
+       arrivalstationname VARCHAR(255),
+       status VARCHAR(50)
     );
 
     \c lastmile_tripservice;
     CREATE TABLE trips (
-                           trip_id SERIAL PRIMARY KEY,
-                           rider_id INTEGER NOT NULL,
-                           driver_id INTEGER NOT NULL,
-                           arrival_id INTEGER NOT NULL,
-                           status VARCHAR(50),
-                           arrivalstationname VARCHAR(255)
+       trip_id SERIAL PRIMARY KEY,
+       rider_id INTEGER NOT NULL,
+       driver_id INTEGER NOT NULL,
+       arrival_id INTEGER NOT NULL,
+       status VARCHAR(50),
+       arrivalstationname VARCHAR(255)
     );
 
     \c lastmile_userservice;
     CREATE TABLE users (
-                           driverid SERIAL PRIMARY KEY,
-                           username VARCHAR(255) UNIQUE NOT NULL,
-                           password VARCHAR(255) NOT NULL,
-                           roles TEXT[]
+       driverid SERIAL PRIMARY KEY,
+       username VARCHAR(255) UNIQUE NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       roles TEXT[]
     );

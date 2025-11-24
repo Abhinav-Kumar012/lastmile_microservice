@@ -18,7 +18,7 @@ spec:
       containers:
         - name: user-service
           image: siddhesh1712/user-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
 
@@ -28,8 +28,8 @@ spec:
               value: org.postgresql.Driver
             - name: SPRING_JPA_DATABASE_PLATFORM
               value: org.hibernate.dialect.PostgreSQLDialect
-            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-              value: none
+#            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+#              value: none
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service.lastmile.svc.cluster.local:5432/lastmile_userservice"
             - name: SPRING_DATASOURCE_USERNAME

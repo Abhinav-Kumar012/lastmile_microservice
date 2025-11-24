@@ -3,3 +3,4 @@ lpush station-service:METROSTATION_ECITY:nearby-places m5 konnapaagrahara neelad
 lpush station-service:METROSTATION_MGROAD:nearby-places GoodShepherdAuditorium ChurchStreet Ubcitymall
 lrange station-service:METROSTATION_SILKBOARD:nearby-places 0 -1
 find . -type d -name "logs" -exec rm -rf {} +
+kubectl config set-context --current --namespace=lastmile

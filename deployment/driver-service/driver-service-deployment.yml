@@ -18,7 +18,7 @@ spec:
       containers:
         - name: driver-service
           image: siddhesh1712/driver-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
 
@@ -42,9 +42,9 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password
-            - name: SPRING_REDIS_HOST
+            - name: SPRING_DATA_REDIS_HOST
               value: redis-service
-            - name: SPRING_REDIS_PORT
+            - name: SPRING_DATA_REDIS_PORT
               value: "6379"
 
           # Resource requests needed for HPA

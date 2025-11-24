@@ -18,7 +18,7 @@ spec:
       containers:
         - name: matching-service
           image: siddhesh1712/matching-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: GRPC_SERVER_HOST
               value: location-service
@@ -27,10 +27,10 @@ spec:
             - name : SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
 
-            - name: SPRING_REDIS_HOST
+            - name: SPRING_DATA_REDIS_HOST
               value: redis-service
 
-            - name: SPRING_REDIS_PORT
+            - name: SPRING_DATA_REDIS_PORT
               value: "6379"
 
           resources:

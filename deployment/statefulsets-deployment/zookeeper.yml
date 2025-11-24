@@ -9,7 +9,6 @@ spec:
     - port: 2181
   selector:
     app: zookeeper
-
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -17,7 +16,7 @@ metadata:
   name: zookeeper
   namespace: lastmile
 spec:
-  serviceName: "zookeeper"
+  serviceName: zookeeper
   replicas: 1
   selector:
     matchLabels:
@@ -30,16 +29,22 @@ spec:
       containers:
         - name: zookeeper
           image: confluentinc/cp-zookeeper:7.5.2
-          ports:
-            - containerPort: 2181
           env:
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
             - name: ZOOKEEPER_TICK_TIME
               value: "2000"
+            - name: ZOOKEEPER_SYNC_LIMIT
+              value: "5"
+            - name: ZOOKEEPER_SERVER_ID
+              value: "1"
+            - name: ZOOKEEPER_SERVERS
+              value: "zookeeper:2888:3888"
+          ports:
+            - containerPort: 2181
           volumeMounts:
             - name: data
-              mountPath: /var/lib/zookeeper
+              mountPath: /var/lib/zookeeper/data
   volumeClaimTemplates:
     - metadata:
         name: data

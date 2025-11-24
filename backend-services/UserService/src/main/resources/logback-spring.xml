@@ -8,13 +8,13 @@
     <logger name="com.example.UserService" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
-    <!-- Enable Spring Security debug logs -->
-    <logger name="org.springframework.security" level="DEBUG">
+    <!-- Enable Spring Security INFO logs -->
+    <logger name="org.springframework.security" level="INFO">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
     <!-- Enable Web logs (HandlerMapping, Filters etc.) -->
-    <logger name="org.springframework.web" level="DEBUG">
+    <logger name="org.springframework.web" level="INFO">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
