@@ -25,7 +25,7 @@ spec:
           # Spring Boot ENV Variables
           env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka-service:9092
+              value: "kafka-service.lastmile.svc.cluster.local:9092"
 
           # Resource requests needed for HPA
           resources:

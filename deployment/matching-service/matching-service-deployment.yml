@@ -25,7 +25,7 @@ spec:
             - name: GRPC_SERVER_PORT
               value: "9095"
             - name : SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: kafka-service:9092
+              value: "kafka-service.lastmile.svc.cluster.local:9092"
 
             - name: SPRING_DATA_REDIS_HOST
               value: redis-service

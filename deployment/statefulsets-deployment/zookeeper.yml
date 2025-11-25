@@ -10,6 +10,20 @@ spec:
   selector:
     app: zookeeper
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-service
+  namespace: lastmile
+spec:
+  type: ClusterIP
+  ports:
+    - name: broker
+      port: 2181
+      targetPort: 2181
+  selector:
+    app: zookeeper
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -38,8 +52,8 @@ spec:
               value: "5"
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-            - name: ZOOKEEPER_SERVERS
-              value: "zookeeper:2888:3888"
+#            - name: ZOOKEEPER_SERVERS
+#              value: "zookeeper-service:2888:3888"
           ports:
             - containerPort: 2181
           volumeMounts:
