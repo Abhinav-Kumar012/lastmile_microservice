@@ -129,19 +129,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
-# dest = "marathalli"
-
-# register_a_rider_and_driver("abhi","abhi","sid","sid")
-# tokens = login("abhi","abhi","sid","sid")
-# route_id = register_route(tokens[1],"electronic_city",dest,4)
-# register_arrival(tokens[0],dest,"METROSTATION_SILKBOARD")
-# time.sleep(30)
-# update_loc(tokens[1],route_id,"hsrlayout")
-# time.sleep(30)
-# update_loc(tokens[1],route_id,"METROSTATION_SILKBOARD")
-# tripId=int(input("Enter TripId: "))
-# arrivalId=int(input("Enter ArrivalId: "))
-# confirm_ride(tokens[0],tripId,arrivalId)
-# time.sleep(30)
-# update_loc(tokens[1],route_id,dest)
