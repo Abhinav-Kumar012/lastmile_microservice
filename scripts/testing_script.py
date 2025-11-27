@@ -94,7 +94,7 @@ def main():
     destination = "marathalli"
     station = "METROSTATION_SILKBOARD"
     #inputs
-    minikube_ip = input("enter ip of minikube : ")
+    minikube_ip = input("enter ip of minikube : ").strip()
     user_port = int(input("enter port of user-service : "))
     rider_port = int(input("enter port of rider-service : "))
     driver_port = int(input("enter port of driver-service : "))
