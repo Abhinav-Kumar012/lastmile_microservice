@@ -21,7 +21,7 @@
 
 - name: Deploy to Minikube
   hosts: kubehosts
-  become: false  # <--- FIX 1: Do not execute as root (sudo) by default
+  become: false
 
   vars:
     deployments_dir: "../deployment"
@@ -30,19 +30,22 @@
     minikube_memory: "6gb"
 
   tasks:
-    # ---------------------------------------------------------
-    # OPTIONAL: Clean up the broken state from your failed run.
-    # Run this ONCE or uncomment if you want a fresh start every time.
-    # ---------------------------------------------------------
-    # - name: Delete broken minikube instance
-    #   shell: minikube delete --all
-    #   ignore_errors: true
-
     - name: Check if Minikube is already running
-      shell: "minikube status --format '{{'{{.Host}}'}}'"
+      shell: "minikube status --format '{{.Host}}'"
       register: minikube_status
       ignore_errors: true
       changed_when: false
+
+    - name: Check if Kubernetes API is accessible
+      shell: "minikube kubectl -- cluster-info"
+      register: cluster_info
+      ignore_errors: true
+      changed_when: false
+
+    - name: Delete broken minikube instance if API is not accessible
+      shell: minikube delete
+      when: minikube_status.stdout == "Running" and cluster_info.rc != 0
+      ignore_errors: true
 
     - name: Start Minikube
       shell: >
@@ -51,13 +54,14 @@
         --cpus={{ minikube_cpu }} 
         --memory={{ minikube_memory }}
         --force
-      when: minikube_status.stdout != "Running"
-      # FIX 2: Added --force above.
-      # Since Jenkins/Ansible often run in root-like environments,
-      # this bypasses the "Do not run as root" error.
+      when: minikube_status. stdout != "Running" or cluster_info.rc != 0
+
+    - name: Wait for Kubernetes API to be ready
+      shell: "minikube kubectl -- cluster-info"
+      register: api_ready
+      retries: 10
+      delay: 15
+      until: api_ready. rc == 0
 
     - name: Deploy using Minikube kubectl wrapper
       shell: minikube kubectl -- apply -R -f {{ deployments_dir }}
-      # FIX 3: Use 'minikube kubectl --' instead of just 'kubectl'.
-      # This ensures you are using the kubectl configured for THIS minikube
-      # instance, avoiding path or permission issues in Jenkins.
