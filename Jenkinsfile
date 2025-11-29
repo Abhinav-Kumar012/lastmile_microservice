@@ -56,8 +56,8 @@ pipeline{
                  subject: "Jenkins Pipeline Failed: ${currentBuild.fullDisplayName}",
                  body: "Attention! The pipeline ${env.JOB_NAME} build #${env.BUILD_NUMBER} failed.\nCheck details here: ${env.BUILD_URL}"
         }
-        cleanup{
-            cleanWs()
-        }
+//         cleanup{
+//             cleanWs()
+//         }
     }
 }
