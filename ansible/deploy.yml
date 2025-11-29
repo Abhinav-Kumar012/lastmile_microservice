@@ -1,28 +1,5 @@
-#- name: Deploy to Minikube
-#  hosts: kubehosts
-#  vars:
-#    deployments_dir: "../deployment"
-#    minikube_driver: "docker"
-#    minikube_cpu: "4"
-#    minikube_memory: "6gb"
-#
-#  tasks:
-#    - name: Check if Minikube is already running
-#      shell: "minikube status --format '{{'{{.Host}}'}}'"
-#      register: minikube_status
-#      ignore_errors: true
-#
-#    - name: Start Minikube
-#      shell: minikube start --driver={{ minikube_driver }} --cpus={{ minikube_cpu }} --memory={{ minikube_memory }}
-#      when: minikube_status.stdout != "Running"
-#
-#    - name: deploy using kubectl
-#      shell: kubectl apply -R -f {{ deployments_dir }}
-
 - name: Deploy to Minikube
   hosts: kubehosts
-  become: false
-
   vars:
     deployments_dir: "../deployment"
     minikube_driver: "docker"
@@ -30,32 +7,15 @@
     minikube_memory: "6gb"
 
   tasks:
-    - name: Check if Kubernetes API is accessible
-      shell: "minikube kubectl -- get nodes"
-      register: cluster_info
-      ignore_errors: true
-      changed_when: false
-
-    - name: Delete broken minikube instance if exists but API not accessible
-      shell: minikube delete
-      when: cluster_info.rc != 0
+    - name: Check if Minikube is already running
+      shell: "minikube status --format '{{'{{.Host}}'}}'"
+      register: minikube_status
       ignore_errors: true
 
     - name: Start Minikube
-      shell: >
-        minikube start 
-        --driver={{ minikube_driver }} 
-        --cpus={{ minikube_cpu }} 
-        --memory={{ minikube_memory }}
-        --force
-      when: cluster_info.rc != 0
+      shell: minikube start --driver={{ minikube_driver }} --cpus={{ minikube_cpu }} --memory={{ minikube_memory }}
+      when: minikube_status.stdout != "Running"
 
-    - name: Wait for Kubernetes API to be ready
-      shell: "minikube kubectl -- get nodes"
-      register: api_ready
-      retries: 10
-      delay: 15
-      until: api_ready. rc == 0
+    - name: deploy using kubectl
+      shell: kubectl apply -R -f {{ deployments_dir }}
 
-    - name: Deploy using Minikube kubectl wrapper
-      shell: minikube kubectl -- apply -R -f {{ deployments_dir }}
