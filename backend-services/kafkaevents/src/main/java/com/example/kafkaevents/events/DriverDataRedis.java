@@ -11,4 +11,5 @@ public class DriverDataRedis {
     private String currentLocation;
     private Integer availableSeats;
     private String destination;
+    private String vehicleNumber;
 }

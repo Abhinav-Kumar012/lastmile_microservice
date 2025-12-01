@@ -28,7 +28,7 @@ public class TripService {
         Trip t = new Trip(matchingEvent.getRiderId(), matchingEvent.getDriverId(), matchingEvent.getArrivalId(), matchingEvent.getArrivalstationname());
         Trip databaseTrip = tripRepository.save(t);
         kafkaTemplate.send("rider-service", new UpdateStatusEvent(matchingEvent.getArrivalId(), "SCHEDULED"));
-        kafkaTemplate.send("notification-service",new NotifyPartiesEvent(databaseTrip.getRiderId(),databaseTrip.getDriverId(),databaseTrip.getTripId(), matchingEvent.getArrivalId(), matchingEvent.getArrivalstationname()));
+        kafkaTemplate.send("notification-service",new NotifyPartiesEvent(databaseTrip.getRiderId(),databaseTrip.getDriverId(),databaseTrip.getTripId(), matchingEvent.getArrivalId(), matchingEvent.getArrivalstationname(), matchingEvent.getVehiclenumber()));
         log.info("Trip with ID: {} Scheduled" , databaseTrip.getTripId());
         ack.acknowledge();
     }

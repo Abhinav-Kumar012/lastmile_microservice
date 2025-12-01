@@ -16,8 +16,7 @@ data:
       driver_id INTEGER NOT NULL,
       starting_location VARCHAR(255),
       destination VARCHAR(255),
-      available_seats INTEGER,
-      current_location VARCHAR(255)
+      vehicle_number VARCHAR(255)
     );
 
     \c lastmile_riderservice;

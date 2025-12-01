@@ -13,4 +13,5 @@ public class NotifyPartiesEvent {
     private Integer tripId;
     private Integer arrivalId;
     private String arrivalstationname;
+    private String vehiclenumber;
 }

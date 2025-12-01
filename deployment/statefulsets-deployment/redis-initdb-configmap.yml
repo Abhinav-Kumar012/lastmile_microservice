@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-initdb
+  namespace: lastmile
+data:
+  init.sh: |
+    #!/bin/sh
+    
+    # Wait for Redis to be ready
+    until redis-cli -h localhost -p 6379 ping; do
+      echo "Waiting for Redis to be ready..."
+      sleep 2
+    done
+    
+    echo "Redis is ready. Initializing data..."
+    
+    # Execute Redis commands
+    redis-cli -h localhost -p 6379 <<EOF
+    LPUSH station-service:METROSTATION_SILKBOARD:nearby-places Silkboard hsrlayout btmlayout
+    LPUSH station-service:METROSTATION_ECITY:nearby-places m5 konnapaagrahara neeladrinagar
+    LPUSH station-service:METROSTATION_MGROAD:nearby-places GoodShepherdAuditorium ChurchStreet Ubcitymall
+    EOF
+    
+    echo "Redis initialization completed successfully!"

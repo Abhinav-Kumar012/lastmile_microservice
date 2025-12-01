@@ -32,11 +32,11 @@ public class RegistrationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer driverid = (Integer) auth.getDetails();
         //We need to save save this route in the db and in the redis persist driver id as key and start location as value so that When the driver location updates we just update that enitty in rediss and we must also update currentlocation in db in case the entry from redis evicts
-        Route r = new Route(driverid,registrationDTO.getStartinglocation(),registrationDTO.getDestination(),registrationDTO.getAvailable_seats(),registrationDTO.getStartinglocation());
+        Route r = new Route(driverid,registrationDTO.getStartinglocation(),registrationDTO.getDestination(),registrationDTO.getVehiclenumber());
         Route savedroute = routeRepository.save(r);
         //add the logic for adding the entry to the redis too
         String redisKey = "driver-service:driver:" + driverid + ":route";
-        redisTemplate.opsForValue().set(redisKey, new DriverDataRedis(registrationDTO.getStartinglocation(),registrationDTO.getAvailable_seats(),registrationDTO.getDestination()));
+        redisTemplate.opsForValue().set(redisKey, new DriverDataRedis(registrationDTO.getStartinglocation(),registrationDTO.getAvailable_seats(),registrationDTO.getDestination(),registrationDTO.getVehiclenumber()));
         Map<String,Integer> map = new HashMap<>();
         logger.info("Route registered for driver id: {} with route_id:{} ", driverid,savedroute.getRouteId());
         map.put("route_id",savedroute.getRouteId());
@@ -49,7 +49,7 @@ public class RegistrationController {
         Integer driverid = (Integer) auth.getDetails();
 
         Route r = routeRepository.findByRouteId(updateLocationDTO.getRoute_id());
-        r.setCurrent_location(updateLocationDTO.getLocation());
+//        r.setCurrent_location(updateLocationDTO.getLocation());
         routeRepository.save(r);//updated in db
         String redisKey = "driver-service:driver:" + driverid + ":route";
         DriverDataRedis  data = (DriverDataRedis) redisTemplate.opsForValue().get(redisKey);
@@ -58,12 +58,12 @@ public class RegistrationController {
             data.setCurrentLocation(updateLocationDTO.getLocation());
             redisTemplate.opsForValue().set(redisKey, data);
         }
-        else
-        {
-            //if data is null in redis we can create a new entry
-            data = new DriverDataRedis(updateLocationDTO.getLocation(),r.getAvailable_seats(),r.getDestination());
-            redisTemplate.opsForValue().set(redisKey, data);
-        }
+//        else
+//        {
+//            //if data is null in redis we can create a new entry
+//            data = new DriverDataRedis(updateLocationDTO.getLocation(),r.getAvailable_seats(),r.getDestination(),r.getVehicle_number());
+//            redisTemplate.opsForValue().set(redisKey, data);
+//        }
         //update the location in redis using the driver id
         logger.info("Location updated for driver id: {} for route_id:{} to: {} ", driverid,updateLocationDTO.getRoute_id(),updateLocationDTO.getLocation());
         return ResponseEntity.status(HttpStatus.OK).body("Location Updated Successfully");

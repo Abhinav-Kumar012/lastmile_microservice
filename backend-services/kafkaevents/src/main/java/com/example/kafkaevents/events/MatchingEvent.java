@@ -12,4 +12,5 @@ public class MatchingEvent {
     private Integer driverId;
     private Integer arrivalId;
     private String arrivalstationname;
+    private String vehiclenumber;
 }

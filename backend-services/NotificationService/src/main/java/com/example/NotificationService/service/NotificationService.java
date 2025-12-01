@@ -65,7 +65,7 @@ public class NotificationService {
     @KafkaHandler
     public void NotifyPartiesThatAreMatched(NotifyPartiesEvent event, Acknowledgment ack)
     {
-        sendNotification("rider", event.getRiderId(), "Driver with ID " + event.getDriverId() + " has been assigned to you.Your Trip id is :"+event.getTripId() +" and your arrival id is :"+ event.getArrivalId());
+        sendNotification("rider", event.getRiderId(), "Driver with ID " + event.getDriverId() + " has been assigned to you.Your Trip id is :"+event.getTripId() +" and your arrival id is :"+ event.getArrivalId())+" Vehicle Number: "+event.getVehiclenumber();
         sendNotification("driver", event.getDriverId(), "You have been assigned to Rider with ID " + event.getRiderId() + "."+" Go to Metro Station: "+event.getArrivalstationname());
         logger.info("Notifications regarding matching sent to Rider ID: {} and Driver ID: {}", event.getRiderId(), event.getDriverId());
         ack.acknowledge();

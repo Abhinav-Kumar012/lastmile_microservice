@@ -3,7 +3,6 @@ package com.example.DriverService.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-//TODO:Rmove the available seats from route and current location also as that is redundant information its only required in redis not here fix it later
 @Entity
 @Table(name="routes")
 @Data
@@ -22,16 +21,18 @@ public class Route {
 
     @Column(name="destination")
     private String destination;
-    @Column(name="available_seats")
-    private Integer available_seats;
-    @Column(name="current_location")
-    private String current_location;
-
-    public Route(Integer driver_id, String startinglocation, String destination, Integer available_seats,String current_location) {
+//    @Column(name="available_seats")
+//    private Integer available_seats;
+//    @Column(name="current_location")
+//    private String current_location;
+    @Column(name="vehicle_number")
+    private  String vehicle_number;
+    public Route(Integer driver_id, String startinglocation, String destination,String vehicle_number) {
         this.driverId = driver_id;
         this.startinglocation = startinglocation;
         this.destination = destination;
-        this.available_seats = available_seats;
-        this.current_location = startinglocation;
+//        this.available_seats = available_seats;
+//        this.current_location = startinglocation;
+        this.vehicle_number = vehicle_number;
     }
 }
