@@ -4,7 +4,7 @@ metadata:
   name: rider-service
   namespace: lastmile
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: rider-service
   ports:

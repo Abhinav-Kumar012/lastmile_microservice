@@ -4,7 +4,7 @@ metadata:
   name: notification-service
   namespace: lastmile
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: notification-service
   ports:

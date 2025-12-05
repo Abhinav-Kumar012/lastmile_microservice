@@ -4,7 +4,7 @@ metadata:
   name: user-service
   namespace: lastmile
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: user-service
   ports:

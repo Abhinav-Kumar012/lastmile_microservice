@@ -1,0 +1,58 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lastmile-ingress
+spec:
+  ingressClassName: latmile-ingress-resource
+  rules:
+  - http:
+      paths:
+      - path: /api/register-route
+        pathType: Prefix
+        backend:
+          service:
+            name: driver-service
+            port:
+              number: 8082
+      - path: /api/update-location
+        pathType: Prefix
+        backend:
+          service:
+            name: driver-service
+            port:
+              number: 8082
+      - path: /notifications/stream
+        pathType: Prefix
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 8086
+      - path: /api/register-arrival
+        pathType: Prefix
+        backend:
+          service:
+            name: rider-service
+            port:
+              number: 8083
+      - path: /api/ride-status
+        pathType: Prefix
+        backend:
+          service:
+            name: rider-service
+            port:
+              number: 8083
+      - path: /api/confirmTrip
+        pathType: Prefix
+        backend:
+          service:
+            name: trip-service
+            port:
+              number: 8084
+      - path: /users
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 8081
