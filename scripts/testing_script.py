@@ -111,7 +111,7 @@ def main():
 
     register_both(rider_name,rider_pass,driver_name,driver_pass,url_register)
     rider_jwt, driver_jwt = login_both(rider_name,rider_pass,driver_name,driver_pass,url_login)
-    route_id = register_route(driver_jwt,"electropnic_city",destination,4,vehicle_num,route_url)
+    route_id = register_route(driver_jwt,"electronic_city",destination,4,vehicle_num,route_url)
     register_arrival(rider_jwt,destination,station,url_arrival)
     time.sleep(30)
     update_loc(driver_jwt,route_id,"hsrlayout",update_loc_url)
