@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatusRequestDTO {
-    private Integer rideId;
+  private Integer rideId;
 }

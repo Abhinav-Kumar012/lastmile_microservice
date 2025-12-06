@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DestinationReachedEvent {
-    private Integer riderId;
-    private Integer driverId;
-    private Integer tripId;
+  private Integer riderId;
+  private Integer driverId;
+  private Integer tripId;
 }

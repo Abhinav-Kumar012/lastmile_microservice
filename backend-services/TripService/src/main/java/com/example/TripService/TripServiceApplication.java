@@ -8,8 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class TripServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TripServiceApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(TripServiceApplication.class, args);
+  }
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TripConfirmedEvent {
-    private Integer riderId;
-    private Integer driverId;
+  private Integer riderId;
+  private Integer driverId;
 }

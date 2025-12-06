@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateLocationDTO {
-    private Integer route_id;
-    private String location;
+  private Integer route_id;
+  private String location;
 }

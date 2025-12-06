@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateStatusEvent {
-    private Integer arrivalId;
-    private String status;
-
+  private Integer arrivalId;
+  private String status;
 }

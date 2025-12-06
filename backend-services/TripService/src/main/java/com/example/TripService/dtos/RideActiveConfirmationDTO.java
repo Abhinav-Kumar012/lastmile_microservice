@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RideActiveConfirmationDTO {
-    Integer tripId;
-    Integer arrivalId;
+  Integer tripId;
+  Integer arrivalId;
 }

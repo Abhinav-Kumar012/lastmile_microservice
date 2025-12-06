@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotifyPartiesEvent {
-    private Integer riderId;
-    private Integer driverId;
-    private Integer tripId;
-    private Integer arrivalId;
-    private String arrivalstationname;
-    private String vehiclenumber;
+  private Integer riderId;
+  private Integer driverId;
+  private Integer tripId;
+  private Integer arrivalId;
+  private String arrivalstationname;
+  private String vehiclenumber;
 }

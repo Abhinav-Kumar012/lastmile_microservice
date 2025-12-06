@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistrationDTO {
-    private String startinglocation;
-    private String destination;
-    private Integer available_seats;
-    private String vehiclenumber;
+  private String startinglocation;
+  private String destination;
+  private Integer available_seats;
+  private String vehiclenumber;
 }

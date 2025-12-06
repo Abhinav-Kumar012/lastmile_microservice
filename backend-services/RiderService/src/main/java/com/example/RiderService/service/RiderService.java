@@ -17,44 +17,43 @@ import org.springframework.stereotype.Service;
 @Service
 @KafkaListener(topics = "rider-service")
 public class RiderService {
-    @Autowired
-    private RiderRepository riderRepository;
-    private KafkaTemplate<String, Object> kafkaTemplate;
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+  @Autowired private RiderRepository riderRepository;
+  private KafkaTemplate<String, Object> kafkaTemplate;
+  @Autowired private RedisTemplate<String, Object> redisTemplate;
 
-    private static final Logger logger = LoggerFactory.getLogger(RiderService.class);
-    public Ride saveRide(Ride ride) {
-        return riderRepository.save(ride);
-    }
-    public Ride getRideById(Integer ride_id){
-        return riderRepository.findById(ride_id).orElse(null);
-    }
+  private static final Logger logger = LoggerFactory.getLogger(RiderService.class);
 
-    @KafkaHandler
-    public void handleTripCompletion(TripCompleted tripCompleted, Acknowledgment ack)
-    {
-        Ride ride = riderRepository.findById(tripCompleted.getArrivalId()).orElse(null);
+  public Ride saveRide(Ride ride) {
+    return riderRepository.save(ride);
+  }
 
-        if(ride != null)
-        {
-            ride.setStatus("COMPLETED");
-            riderRepository.save(ride);
-            logger.info("Ride with ArrivalID {} marked as COMPLETED", ride.getArrivalId());
-        }
-        ack.acknowledge();
+  public Ride getRideById(Integer ride_id) {
+    return riderRepository.findById(ride_id).orElse(null);
+  }
 
+  @KafkaHandler
+  public void handleTripCompletion(TripCompleted tripCompleted, Acknowledgment ack) {
+    Ride ride = riderRepository.findById(tripCompleted.getArrivalId()).orElse(null);
+
+    if (ride != null) {
+      ride.setStatus("COMPLETED");
+      riderRepository.save(ride);
+      logger.info("Ride with ArrivalID {} marked as COMPLETED", ride.getArrivalId());
     }
-    @KafkaHandler
-    public void handleUpdateStatusEvent(UpdateStatusEvent updateStatusEvent,Acknowledgment ack)
-    {
-        Ride ride = riderRepository.findById(updateStatusEvent.getArrivalId()).orElse(null);
-        if(ride != null)
-        {
-            ride.setStatus(updateStatusEvent.getStatus());
-            riderRepository.save(ride);
-            logger.info("Ride with ArrivalID {} status updated to {}", ride.getArrivalId(), updateStatusEvent.getStatus());
-        }
-        ack.acknowledge();
+    ack.acknowledge();
+  }
+
+  @KafkaHandler
+  public void handleUpdateStatusEvent(UpdateStatusEvent updateStatusEvent, Acknowledgment ack) {
+    Ride ride = riderRepository.findById(updateStatusEvent.getArrivalId()).orElse(null);
+    if (ride != null) {
+      ride.setStatus(updateStatusEvent.getStatus());
+      riderRepository.save(ride);
+      logger.info(
+          "Ride with ArrivalID {} status updated to {}",
+          ride.getArrivalId(),
+          updateStatusEvent.getStatus());
     }
+    ack.acknowledge();
+  }
 }

@@ -5,3 +5,4 @@ lrange station-service:METROSTATION_SILKBOARD:nearby-places 0 -1
 find . -type d -name "logs" -exec rm -rf {} +
 kubectl config set-context --current --namespace=lastmile
 java -jar google-java-format-1.33.0-all-deps.jar --replace $(find lastmile_microservice/backend-services -name "*.java") # format code java
+locust -f ./stress_test.py # stress testing

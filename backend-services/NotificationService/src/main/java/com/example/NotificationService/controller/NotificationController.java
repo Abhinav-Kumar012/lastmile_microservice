@@ -1,6 +1,5 @@
 package com.example.NotificationService.controller;
 
-
 import com.example.NotificationService.security.JwtService;
 import com.example.NotificationService.service.NotificationService;
 import io.jsonwebtoken.Claims;
@@ -16,20 +15,21 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    private final JwtService jwtService;
-    private final NotificationService notificationService;
-    private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
-    public NotificationController(JwtService jwtService, NotificationService notificationService) {
-        this.jwtService = jwtService;
-        this.notificationService = notificationService;
-    }
+  private final JwtService jwtService;
+  private final NotificationService notificationService;
+  private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
-    @GetMapping("/stream")
-    public SseEmitter stream(@RequestHeader("Authorization") String token) {
-        Claims claims = jwtService.extractAllClaims(token);
-        String role = claims.get("role", String.class);
-        Integer id = claims.get("driverid", Integer.class);
-        logger.info("New SSE connection for role: {} with id: {}", role, id);
-        return notificationService.addEmitter(role, id);
-    }
+  public NotificationController(JwtService jwtService, NotificationService notificationService) {
+    this.jwtService = jwtService;
+    this.notificationService = notificationService;
+  }
+
+  @GetMapping("/stream")
+  public SseEmitter stream(@RequestHeader("Authorization") String token) {
+    Claims claims = jwtService.extractAllClaims(token);
+    String role = claims.get("role", String.class);
+    Integer id = claims.get("driverid", Integer.class);
+    logger.info("New SSE connection for role: {} with id: {}", role, id);
+    return notificationService.addEmitter(role, id);
+  }
 }

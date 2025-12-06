@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatchingEvent {
-    private Integer riderId;
-    private Integer driverId;
-    private Integer arrivalId;
-    private String arrivalstationname;
-    private String vehiclenumber;
+  private Integer riderId;
+  private Integer driverId;
+  private Integer arrivalId;
+  private String arrivalstationname;
+  private String vehiclenumber;
 }

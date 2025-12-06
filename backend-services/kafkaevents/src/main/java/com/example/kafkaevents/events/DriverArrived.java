@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DriverArrived {
 
-    private Integer riderId;
+  private Integer riderId;
 }
