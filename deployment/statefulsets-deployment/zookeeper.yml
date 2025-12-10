@@ -52,8 +52,6 @@ spec:
               value: "5"
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-#            - name: ZOOKEEPER_SERVERS
-#              value: "zookeeper-service:2888:3888"
           ports:
             - containerPort: 2181
           volumeMounts:

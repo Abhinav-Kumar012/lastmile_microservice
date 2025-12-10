@@ -1,4 +1,3 @@
-// java
 package com.example.MatchingService.config;
 
 import com.example.kafkaevents.events.DriverDataRedis;

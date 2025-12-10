@@ -6,7 +6,7 @@ metadata:
   labels:
     app: driver-service
 spec:
-  replicas: 1   # HPA will overwrite this when scaling
+  replicas: 1   
   selector:
     matchLabels:
       app: driver-service
@@ -22,7 +22,7 @@ spec:
           ports:
             - containerPort: 8082
 
-          # Spring Boot ENV Variables
+          
           env:
             - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
               value: org.postgresql.Driver
@@ -47,7 +47,7 @@ spec:
             - name: SPRING_DATA_REDIS_PORT
               value: "6379"
 
-          # Resource requests needed for HPA
+          
           resources:
             requests:
               cpu: "150m"

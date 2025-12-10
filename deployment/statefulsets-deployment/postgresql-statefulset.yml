@@ -41,7 +41,7 @@ spec:
       labels:
         app: postgres
     spec:
-      # ❌ Removed initContainers (not needed for Option B)
+    
 
       containers:
         - name: postgres
@@ -60,15 +60,13 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password
-#            - name: POSTGRES_DB
-#              value: postgres
 
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
               subPath: data
 
-            # ✔ Option B: Mount init SQL directly into entrypoint directory
+          
             - name: initdb
               mountPath: /docker-entrypoint-initdb.d
 

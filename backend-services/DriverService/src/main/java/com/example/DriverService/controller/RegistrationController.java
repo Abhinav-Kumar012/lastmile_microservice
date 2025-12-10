@@ -64,7 +64,6 @@ public class RegistrationController {
     Integer driverid = (Integer) auth.getDetails();
 
     Route r = routeRepository.findByRouteId(updateLocationDTO.getRoute_id());
-    //        r.setCurrent_location(updateLocationDTO.getLocation());
     routeRepository.save(r); // updated in db
     String redisKey = "driver-service:driver:" + driverid + ":route";
     DriverDataRedis data = (DriverDataRedis) redisTemplate.opsForValue().get(redisKey);
@@ -72,13 +71,6 @@ public class RegistrationController {
       data.setCurrentLocation(updateLocationDTO.getLocation());
       redisTemplate.opsForValue().set(redisKey, data);
     }
-    //        else
-    //        {
-    //            //if data is null in redis we can create a new entry
-    //            data = new
-    // DriverDataRedis(updateLocationDTO.getLocation(),r.getAvailable_seats(),r.getDestination(),r.getVehicle_number());
-    //            redisTemplate.opsForValue().set(redisKey, data);
-    //        }
     // update the location in redis using the driver id
     logger.info(
         "Location updated for driver id: {} for route_id:{} to: {} ",

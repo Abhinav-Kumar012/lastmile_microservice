@@ -53,7 +53,7 @@ public class TaskScheduler {
             logger.info("Driver arrived event sent for riderId: " + trip.getRiderId());
           }
         } else if (value.getCurrentLocation().equals(value.getDestination())) {
-          // Get all the trups that are active for this driver
+          // Get all the trips that are active for this driver
           ArrayList<Trip> ongoingTrips = tripRepository.getActiveTripsForDriver(driverid);
           for (Trip trip : ongoingTrips) {
             kafkaTemplate.send(

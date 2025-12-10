@@ -46,15 +46,15 @@ spec:
           ports:
             - containerPort: 9092
           env:
-            # Zookeeper
+          
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: "zookeeper-service.lastmile.svc.cluster.local:2181"
 
-            # Broker ID must match statefulset ordinal
+          
             - name: KAFKA_BROKER_ID
               value: "0"
 
-            # INTERNAL + EXTERNAL listeners
+          
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
 
@@ -78,17 +78,6 @@ spec:
 
             - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
               value: "1"
-#            - name: KAFKA_JMX_PORT
-#              value: 9101
-#            - name: KAFKA_JMX_HOSTNAME
-#              value: localhost
-#            - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
-#              value: "0"
-#            - name: KAFKA_LOG_RETENTION_HOURS
-#              value: "168"
-#
-#            - name: KAFKA_LOG_SEGMENT_BYTES
-#              value: "1073741824"
 
           volumeMounts:
             - name: data

@@ -12,7 +12,7 @@ spec:
     app: redis
 
 ---
-# Headless service required for StatefulSet stable DNS
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -32,7 +32,7 @@ metadata:
   name: redis
   namespace: lastmile
 spec:
-  serviceName: "redis"   # Headless service for stable pod identity
+  serviceName: "redis"   
   replicas: 1
   selector:
     matchLabels:
@@ -47,7 +47,7 @@ spec:
           image: redis:8.2.2-alpine
           ports:
             - containerPort: 6379
-          args: ["--appendonly", "yes"]     # Persistence (AOF)
+          args: ["--appendonly", "yes"]     
           volumeMounts:
             - name: redis-data
               mountPath: /data

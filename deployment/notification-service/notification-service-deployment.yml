@@ -6,7 +6,7 @@ metadata:
   labels:
     app: notification-service
 spec:
-  replicas: 1   # HPA will overwrite this when scaling
+  replicas: 1   
   selector:
     matchLabels:
       app: notification-service
@@ -22,12 +22,12 @@ spec:
           ports:
             - containerPort: 8086
 
-          # Spring Boot ENV Variables
+          
           env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka-service.lastmile.svc.cluster.local:9092"
 
-          # Resource requests needed for HPA
+          
           resources:
             requests:
               cpu: "150m"

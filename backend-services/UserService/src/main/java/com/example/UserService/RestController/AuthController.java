@@ -25,14 +25,12 @@ public class AuthController {
   private final JwtTokenProvider jwtTokenProvider;
   private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-  // ✅ REGISTER endpoint
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody User user) {
     if (userRepository.findByUsername(user.getUsername()) != null) {
       return ResponseEntity.badRequest().body("Username already exists!");
     }
 
-    // Encode password
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
     logger.info(
@@ -43,7 +41,6 @@ public class AuthController {
     return ResponseEntity.ok("User registered successfully!");
   }
 
-  // ✅ LOGIN endpoint
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(@RequestBody Map<String, String> request) {
     String username = request.get("username");
@@ -55,8 +52,6 @@ public class AuthController {
     if (user == null) {
       return ResponseEntity.status(404).body("User not found!");
     }
-
-    //        User user = optionalUser.get();
 
     // Check that the user has the given role
     boolean roleExists = false;

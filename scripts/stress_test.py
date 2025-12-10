@@ -5,14 +5,12 @@ import time
 INGRESS_PORT = 80
 MINIKUBE_IP = "192.168.49.2"
 
-# ---------- CONFIG ----------
 REGISTER_URL = f"http://{MINIKUBE_IP}:{INGRESS_PORT}/users/register"
 LOGIN_URL = f"http://{MINIKUBE_IP}:{INGRESS_PORT}/users/login"
 USERNAME = "loadtest_user"
 PASSWORD = "loadtest_pass"
 ROLES = ["rider"]
 ROLE = "rider"
-# ----------------------------
 
 def login(user_name : str,user_pass: str,role : str,url : str) -> str:
     params = {
@@ -34,7 +32,7 @@ def register(user_name : str,user_pass : str,roles : list[str],url : str):
     print(f"user {user_name} : {response.text}")
 
 class LoginLoadTest(HttpUser):
-    host = f"http://{MINIKUBE_IP}"   # required by Locust
+    host = f"http://{MINIKUBE_IP}"
     wait_time = between(1, 2)
 
     def on_start(self):

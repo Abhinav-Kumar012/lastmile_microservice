@@ -6,7 +6,7 @@ metadata:
   labels:
     app: rider-service
 spec:
-  replicas: 1   # HPA will overwrite this when scaling
+  replicas: 1   
   selector:
     matchLabels:
       app: rider-service
@@ -22,7 +22,7 @@ spec:
           ports:
             - containerPort: 8083
 
-          # Spring Boot ENV Variables
+          
           env:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service.lastmile.svc.cluster.local:5432/lastmile_riderservice"
@@ -49,7 +49,7 @@ spec:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka-service.lastmile.svc.cluster.local:9092"
             
-          # Resource requests needed for HPA
+          
           resources:
             requests:
               cpu: "150m"

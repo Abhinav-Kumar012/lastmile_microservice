@@ -36,6 +36,4 @@ public class Trip {
     this.status = "SCHEDULED";
     this.arrivalstationname = arrivalstationname;
   }
-  // arrivalstationname
-  //
 }

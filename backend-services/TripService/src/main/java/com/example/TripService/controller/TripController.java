@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class TripController {
-  // send event to kafka to rider service topic so change the status of ride of a specific arribalid
+  // send event to kafka to rider service topic so change the status of ride of a specific arrivalid
   @Autowired private TripRepository tripRepository;
   @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
   private static final Logger logger = LoggerFactory.getLogger(TripController.class);

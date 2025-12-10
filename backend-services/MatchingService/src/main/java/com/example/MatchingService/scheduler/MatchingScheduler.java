@@ -105,7 +105,6 @@ public class MatchingScheduler {
 
   @Scheduled(fixedDelay = 5000) // Fix the Time Required
   public void runPeriodicJob() {
-    //        System.out.println("HI from Matching Scheduler");
     HashMap<String, DriverDataRedis> driverdata;
     HashMap<String, RiderDataRedis> riderdata;
     boolean acquired = lockManager.tryAcquireLock(LOCK_KEY, instanceId, Duration.ofSeconds(10));
