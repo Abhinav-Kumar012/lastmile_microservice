@@ -69,6 +69,7 @@ spec:
           
             - name: initdb
               mountPath: /docker-entrypoint-initdb.d
+#              Any files inside this folder will run when container is created for first time
 
       volumes:
         - name: initdb
